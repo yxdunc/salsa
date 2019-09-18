@@ -13,7 +13,7 @@ for x in /proc/asound/card*/pcm*/sub*/status; do
 	alsa_device=$(dirname ${x#*/asound/})
 	io=$(cat "$(dirname ${x})/info" | grep stream | cut -d ':' -f 2 | xargs)
 	if [ "$state" != "closed" ]; then
-		owner_pid=$(cat $x | grep owner_pid | sed -r "s/owner_pid +: +*([0-9]*).*/\1/")
+		owner_pid=$(cat $x | grep owner_pid | cut -d ":" -f 2 | xargs)
 		owner_name=$(ps | grep ${owner_pid} | grep -v grep)
 		printf "[$(green RUNNING)] ${alsa_device} ( ${io} )\n"
 		echo "	owner: $owner_name"
